@@ -1,0 +1,57 @@
+version: '3'
+
+services: 
+    web:
+        restart: always
+        build: .
+        volumes: 
+            - ./:/var/www/
+        depends_on: 
+            - db
+
+    db:
+        image: postgres:12.0-alpine
+        restart: always
+        environment:
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: laravel
+        volumes: 
+        - "./.docker/dbdata:/var/lib/postgresql/data"
+
+    nginx:
+        build: ./.docker/nginx
+        restart: always
+        ports:
+            - "8000:80"
+        volumes: 
+            - ./:/var/www
+        depends_on: 
+            - web
+            
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
+        user: "1000:1000"
+        volumes:
+            - elasticsearch-data:/usr/share/elasticsearch/data
+        environment:
+            - discovery.type=single-node
+            - cluster.routing.allocation.disk.threshold_enabled=false
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        ports:
+            - "9200:9200"
+        networks:
+            - elasticsearch_network
+    
+
+
+networks:
+    elasticsearch_network:
+        driver: bridge
+        
+volumes:
+    elasticsearch-data:
