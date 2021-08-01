@@ -1,8 +1,36 @@
 body {
     margin: 0;
     padding: 0;
+    background-color: #fafafa;
+}
+.row{
+    margin-bottom: 20px;
+}
+.div-buttons {
+    min-height: 80vh;
 }
 
 .title {
     margin: 20px;
+}
+
+.btn-home {
+    margin: 10px;
+    padding: 20px;
+    font-size: larger;
+    min-width: 250px;
+}
+
+.btn-home:hover {
+    opacity: .8;
+    transition: 0.3s;    
+}
+
+.form-button > button, .form-button > a {
+    float: right !important;
+    margin-bottom: 0 !important;
+}
+
+.form-button > a {
+    margin-right: 10px;
 }
